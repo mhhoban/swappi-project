@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
+
 class Users(Base):
     __tablename__ = 'users'
 
@@ -23,6 +24,7 @@ class Users(Base):
             'id': self.id,
             'name': self.name,
         }
+
 
 class Categories(Base):
     __tablename__ = 'categories'
@@ -41,6 +43,7 @@ class Categories(Base):
             'id': self.id,
             'name': self.name,
         }
+
 
 class Items(Base):
     __tablename__ = 'items'
@@ -65,8 +68,6 @@ class Items(Base):
             'description': self.description,
         }
 
-
-
-engine = create_engine('sqlite:///itemcatalog.db')
+engine = create_engine('sqlite:///db/itemcatalog.db')
 
 Base.metadata.create_all(engine)
