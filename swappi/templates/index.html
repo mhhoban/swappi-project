@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block header_block %}
+
+  <title> Swappi! </title>
+
+{% endblock %}
+
+{% block mainblock %}
+
+  {% for category in categories %}
+
+    <p> {{ category.name }} </p>
+
+  {% endfor %}
+
+
+{% endblock %}

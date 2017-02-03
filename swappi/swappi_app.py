@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -16,18 +16,15 @@ session = DBSession()
 
 
 @app.route('/')
-@app.route('/hello')
 def helloWorld():
 
     categories = session.query(Categories).all()
     items = session.query(Items).all()
 
-    import pdb
-    pdb.set_trace()
-    
-    a = categories[0]
-
-    return a
+    return render_template('index.html',
+                           categories=categories,
+                           items=items,
+                           )
 
 if __name__ == '__main__':
 
