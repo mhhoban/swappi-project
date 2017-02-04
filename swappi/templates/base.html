@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 
 <html>
+  <div class="container-fluid">
 
-  <head>
-    {% block header_block %}
-    {% endblock %}
-  </head>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css') }}">
+      <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/swappistyle.css') }}">
 
-  <body>
-    {% block mainblock %}
-    {% endblock %}
-  </body>
+      {% block header_block %}
+      {% endblock %}
+    </head>
+
+
+
+    <body>
+      {% block content_block %}
+      {% endblock %}
+    </body>
+
+  </div>
 
 </html>

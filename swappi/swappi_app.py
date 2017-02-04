@@ -32,6 +32,5 @@ def helloWorld():
                            )
 
 if __name__ == '__main__':
-    # swappi = Swappi('sqlite:///db/itemcatalog.db')
     app.debug = True
     app.run(host='localhost', port=8080)
