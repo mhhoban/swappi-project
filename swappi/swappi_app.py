@@ -15,6 +15,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+# TODO: move db init to setup.py
 def db_init():
     _db_setup = db_setup.DbSetup(app.config['SQL_DB_URI'])
     _db_setup.db_init()
@@ -30,6 +31,20 @@ def helloWorld():
                            categories=categories,
                            items=items,
                            )
+
+
+@app.route('/category/<int:category_id>')
+def category_page(category_id):
+
+    categories = session.query(Categories).all()
+    items = session.query(Items).filter_by(category_id=category_id).all()
+
+    import pdb
+    pdb.set_trace()
+
+    return render_template('categories.html',
+                           categories=categories,
+                           items=items)
 
 if __name__ == '__main__':
     app.debug = True

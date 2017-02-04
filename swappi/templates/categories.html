@@ -2,7 +2,7 @@
 
 {% block header_block %}
 
-  <title> Swappi! </title>
+  <title> Swappi! : Category </title>
 
 {% endblock %}
 
@@ -17,17 +17,15 @@
         </div>
         <div class="col-md-4">
 
-        </div>
-
-        <div class="col-md-4">
           {% for category in categories %}
             <div class="category-center">
 
               <div class="row">
 
-                <div class="col-md-4">
+                <div class="col-md-4"
 
-                  <a href="/category/{{category.id}}"> {{ category.name }} </a>
+                  <a href="/category?cat={{category.id}}"> {{ category.name }} </a>
+
 
                 </div>
 
@@ -36,6 +34,27 @@
             </div>
 
           {% endfor %}
+
+        </div>
+
+        <div class="col-md-4">
+          {% for item in items %}
+            <div class="category-center">
+
+              <div class="row">
+
+                <div class="col-md-4">
+
+                  <a href="/category?cat="> {{ item.title }} </a>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          {% endfor %}
+
         </div>
       </div>
 
