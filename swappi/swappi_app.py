@@ -48,7 +48,7 @@ def indexPage():
 def category_page(category_id):
 
     session = get_db_cursor()
-    category_name = (session.query(Categories).filter_by(category_id=category_id).one()).name
+    category_name = (session.query(Categories).filter_by(id=category_id).one()).name
     categories = session.query(Categories).all()
     items = session.query(Items).filter_by(category_id=category_id).all()
 

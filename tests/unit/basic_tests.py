@@ -19,8 +19,6 @@ class BasicTests(unittest.TestCase):
     def testIndexContent(self):
         session = swappi_app.get_db_cursor()
 
-        # TODO rewrite test to import all categories from db automatically and check all are present.
-
         categories = session.query(db_schema.Categories).all()
 
         categories = [category.name for category in categories]
@@ -32,3 +30,19 @@ class BasicTests(unittest.TestCase):
             hamcrest.assert_that(response.data,
                                  hamcrest.contains_string(cat),
                                  )
+
+    def testContegoryContent(self):
+
+        session = swappi_app.get_db_cursor()
+
+        categories = session.query(db_schema.Categories).all()
+        categories = [category.id for category in categories]
+
+        for cat in categories:
+            response = self.app.get('/category/'+str(cat))
+            items = session.query(db_schema.Items).filter_by(
+                category_id=cat).all()
+
+            for item in items:
+                hamcrest.assert_that(response.data,
+                                     hamcrest.contains_string(item.title))
