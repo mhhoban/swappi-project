@@ -4,3 +4,4 @@ sys.path.insert(0, os.path.abspath('swappi'))
 
 import swappi_app
 import db_schema
+import test_db_setup

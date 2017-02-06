@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block header_block %}
+
+  <title> Swappi! Add </title>
+
+{% endblock %}
+
+{% block content_block %}
+
+  <form action="add-item" method="post">
+
+    <select name="item_cat">
+
+      {% for category in categories %}
+
+        <option value="{{category.id}}"> {{category.name}} </option>
+
+      {% endfor %}
+    </select>
+    <p> Item Title: </p>
+    <input name="item_title" type="text">
+
+    <p> Item Description: </p>
+
+    <textarea name="item_desc"> </textarea>
+
+    <br>
+
+    <button type="submit"> Submit </button>
+
+  </form>
+
+{% endblock %}

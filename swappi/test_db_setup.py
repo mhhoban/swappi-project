@@ -1,73 +1,120 @@
-import os
-import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-Base = declarative_base()
-
-
-class Users(Base):
-    __tablename__ = 'users'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False)
-
-    @property
-    def serialize(self):
-        """
-        Return user data in serializable format
-        """
-
-        return {
-            'id': self.id,
-            'name': self.name,
-        }
+from db_schema import Base, Categories, Items, Users
 
 
-class Categories(Base):
-    __tablename__ = 'categories'
+class DbSetup:
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False)
+    def __init__(self, db_uri):
 
-    @property
-    def serialize(self):
-        """
-        Return Category Data in serializable format
-        :return:
-        """
+        self.db_uri = db_uri
 
-        return {
-            'id': self.id,
-            'name': self.name,
-        }
+    def db_init(self):
+
+        engine = create_engine(self.db_uri)
+
+        Base.metadata.bind = engine
+
+        DBSession = sessionmaker(bind=engine)
+        session = DBSession()
+
+        # drop any exisitng data
+        session.query(Users).delete()
+        session.query(Categories).delete()
+        session.query(Items).delete()
+
+        session.commit()
+
+        session = DBSession()
+
+        new_categories = ['spaceships',
+                          'drones',
+                          'time machines',
+                          'Hover Boards',
+                          'Jetpacks',
+                          ]
+
+        for category in new_categories:
+            newCategory = Categories(name=category)
+            session.add(newCategory)
+
+        session.commit()
+
+        session = DBSession()
+
+        new_spaceships = ['Falcon 10',
+                          'Sparrow 2',
+                          'Drake 11',
+                          ]
+
+        for spaceship in new_spaceships:
+            newItem = Items(title=spaceship,
+                            description='a thing that flies in space',
+                            category_id=1,
+                            )
+            session.add(newItem)
+
+        session.commit()
+
+        session = DBSession()
+
+        new_drones = ['Palantir 1',
+                      'Galadriel M',
+                      'Shadow V',
+                      ]
+
+        for drone in new_drones:
+            newItem = Items(title=drone,
+                            description='a thing that flies and spies',
+                            category_id=2,
+                            )
+            session.add(newItem)
+
+        session.commit()
+        session = DBSession()
 
 
-class Items(Base):
-    __tablename__ = 'items'
+        new_time_machines = ['Wells IX',
+                             'Brown C',
+                             'Chrono 3',
+                             ]
 
-    id = Column(Integer, primary_key=True)
-    category_id = Column(Integer, ForeignKey('categories.id'))
-    category = relationship(Categories)
-    title = Column(String(50), nullable=False)
-    description = Column(String(250))
+        for time_machine in new_time_machines:
+            newItem = Items(title=time_machine,
+                            description='short or long jumps through time',
+                            category_id=3,
+                            )
+            session.add(newItem)
 
-    @property
-    def serialize(self):
-        """
-        return item data in serializable format
-        """
+        session.commit()
+        session = DBSession()
 
-        return {
-            'id': self.id,
-            'category_id': self.category_id,
-            'category': self.category,
-            'title': self.title,
-            'description': self.description,
-        }
+        new_hover_boards = ['McFly 7',
+                            'Biff 0',
+                            'Fire B',
+                            ]
 
-engine = create_engine('sqlite:///db/testitemcatalog.db')
+        for hover_board in new_hover_boards:
+            newItem = Items(title=hover_board,
+                            description='It floats, when walking is too hard',
+                            category_id=4,
+                            )
+            session.add(newItem)
 
-Base.metadata.create_all(engine)
+        session.commit()
+        session = DBSession()
+
+        new_jetpacks = ['Rocketeer Mark V',
+                        'Stark 1',
+                        'Branson 9',
+                        ]
+
+        for jetpack in new_jetpacks:
+            newItem = Items(title=jetpack,
+                            description='Basically the coolest thing ever',
+                            category_id=5,
+                            )
+            session.add(newItem)
+
+        session.commit()
