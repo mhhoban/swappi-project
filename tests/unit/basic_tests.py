@@ -46,3 +46,23 @@ class BasicTests(unittest.TestCase):
             for item in items:
                 hamcrest.assert_that(response.data,
                                      hamcrest.contains_string(item.title))
+
+    def testItemContent(self):
+
+        session = swappi_app.get_db_cursor()
+
+        categories = session.query(db_schema.Categories).all()
+
+        for cat in categories:
+            items = session.query(db_schema.Items).filter_by(
+                category_id=cat.id).all()
+
+            for item in items:
+                response = self.app.get('/item/' + str(item.id))
+
+                hamcrest.assert_that(response.data,
+                                     hamcrest.contains_string(cat.name))
+                hamcrest.assert_that(response.data,
+                                     hamcrest.contains_string(item.title))
+                hamcrest.assert_that(response.data,
+                                     hamcrest.contains_string(item.description))

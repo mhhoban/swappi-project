@@ -58,6 +58,27 @@ def category_page(category_id):
                            items=items,
                            )
 
+@app.route('/item/<int:item_id>')
+def item_page(item_id):
+
+    session = get_db_cursor()
+    item_data = session.query(Items).filter_by(id=item_id).one()
+
+    item_category = item_data.category.name
+    item_title = item_data.title
+    item_desc = item_data.description
+
+    categories = session.query(Categories).all()
+    items = session.query(Items).filter_by(category_id=item_data.category_id).all()
+
+    return render_template('items.html',
+                           item_cat=item_category,
+                           item_title=item_title,
+                           item_desc=item_desc,
+                           categories=categories,
+                           items=items,
+                           )
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='localhost', port=8080)
