@@ -1,13 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for
-
+from flask import session as login_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db_schema import Base, Categories, Items, Users
+from oauth2client import client, crypt
 
-import db_setup
+import json
 
+from flask import make_response
+import requests
+
+import random, string
 
 app = Flask(__name__)
+
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
+APPLICATION_NAME = "Swappi"
+
 app.config['SQL_DB_URI'] = 'sqlite:///db/itemcatalog.db'
 
 
@@ -29,6 +39,57 @@ def get_db_cursor():
     session = DBSession()
 
     return session
+
+
+@app.route('/auth', methods=['GET', 'POST'])
+def authorization():
+
+    print('in auth func')
+
+    gtoken = request.values['idtoken']
+
+    try:
+        idinfo = client.verify_id_token(gtoken, CLIENT_ID)
+
+        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise crypt.AppIdentityError("Wrong issuer.")
+
+    except crypt.AppIdentityError:
+        raise
+
+    login_session['access_token'] = gtoken
+
+    import pdb
+    pdb.set_trace()
+
+
+@app.route('/deauth', methods=['GET', 'POST'])
+def deauthorization():
+
+    if request.values['logout'] == 'True':
+
+        return make_response('received notice')
+
+
+@app.route('/login')
+def showLogin():
+
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in xrange(32))
+    login_session['state'] = state
+    # return "The current session state is %s" % login_session['state']
+
+    return render_template('login.html')
+
+
+# @app.route('/testPong', methods=['GET', 'POST'])
+# def testPong():
+#
+#     if request.values['pong'] == 'pongz':
+#         return make_response('pongzzzz')
+#
+#     else:
+#         return make_response('ping')
 
 
 @app.route('/')
@@ -109,5 +170,6 @@ def item_add():
 
 
 if __name__ == '__main__':
+    app.secret_key = 'totally_secure'
     app.debug = True
     app.run(host='localhost', port=8080)
