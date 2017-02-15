@@ -6,15 +6,13 @@
   <meta name="google-signin-client_id" content="973477618863-32d60mluresdss1melcrqmpui0qiq3p4.apps.googleusercontent.com">
 
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
 {% endblock %}
 
 
 {% block content_block %}
 
-  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  <div class="g-signin2 login-button" data-onsuccess="onSignIn"></div>
 
   <div id="result"></div>
   <script>
@@ -26,6 +24,8 @@
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       xhr.onload = function() {
         console.log('Signed in as: ' + xhr.responseText);
+        window.location='http://localhost:8080';
+
       };
       xhr.send('idtoken=' + id_token);
 

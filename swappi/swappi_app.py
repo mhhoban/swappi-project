@@ -10,7 +10,9 @@ import json
 from flask import make_response
 import requests
 
-import random, string
+import random
+import string
+import user_utils
 
 app = Flask(__name__)
 
@@ -58,9 +60,10 @@ def authorization():
         raise
 
     login_session['access_token'] = gtoken
+    login_session['user_email'] = idinfo['email']
+    login_session['name'] = idinfo['name']
 
-    import pdb
-    pdb.set_trace()
+    return make_response(login_session['user_email'] + ' logged in!')
 
 
 @app.route('/deauth', methods=['GET', 'POST'])
@@ -68,7 +71,15 @@ def deauthorization():
 
     if request.values['logout'] == 'True':
 
-        return make_response('received notice')
+        try:
+            del login_session['access_token']
+            del login_session['user_email']
+            del login_session['name']
+            return make_response('received notice')
+
+        except KeyError:
+
+            return make_response('not logged in')
 
 
 @app.route('/login')
@@ -99,9 +110,12 @@ def indexPage():
     categories = session.query(Categories).all()
     items = session.query(Items).all()
 
+    user = user_utils.user_auth_check(login_session)
+
     return render_template('index.html',
                            categories=categories,
                            items=items,
+                           user=user,
                            )
 
 

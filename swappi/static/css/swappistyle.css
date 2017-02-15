@@ -4,3 +4,16 @@
   min-height: 2em;
   margin-left: 25%;
 }
+.login-status-header {
+  text-align: right;
+}
+.login-button {
+  margin-left: 80%;
+}
+.swappi-logo {
+  font-size: 3em;
+  font-weight: bold;
+}
+.hide {
+  display: none;
+}

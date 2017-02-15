@@ -13,6 +13,7 @@ class Users(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
+    email = Column(String(50), nullable=False)
 
     @property
     def serialize(self):
@@ -23,6 +24,7 @@ class Users(Base):
         return {
             'id': self.id,
             'name': self.name,
+            'email': self.email,
         }
 
 
