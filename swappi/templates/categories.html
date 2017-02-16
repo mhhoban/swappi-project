@@ -18,7 +18,9 @@
         <div class="col-md-4">
 
           {% for category in categories %}
-            <div class="category-center">
+            {% if category == categories[0] %}
+
+            <div class="category black-border border-top">
 
               <div class="row">
 
@@ -32,19 +34,15 @@
 
             </div>
 
-          {% endfor %}
+            {% elif category == categories[-1] %}
 
-        </div>
-
-        <div class="col-md-4">
-          {% for item in items %}
-            <div class="category-center">
+            <div class="category black-border border-bottom">
 
               <div class="row">
 
                 <div class="col-md-4">
 
-                  <a href="/item/{{item.id}}"> {{ item.title }} </a>
+                  <a href="/category/{{category.id}}"> {{ category.name }} </a>
 
                 </div>
 
@@ -52,6 +50,76 @@
 
             </div>
 
+            {% else %}
+              <div class="category black-border border-mid">
+
+                <div class="row">
+
+                  <div class="col-md-4">
+
+                    <a href="/category/{{category.id}}"> {{ category.name }} </a>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            {% endif %}
+
+          {% endfor %}
+
+        </div>
+
+        <div class="col-md-4">
+          {% for item in items %}
+            {% if item == items[0] %}
+
+              <div class="category black-border border-top">
+
+                <div class="row">
+
+                  <div class="col-md-4">
+
+                    <a href="/item/{{item.id}}"> {{ item.title }} </a>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            {% elif item == items[-1] %}
+
+              <div class="category black-border border-bottom">
+
+                <div class="row">
+
+                  <div class="col-md-4">
+
+                    <a href="/item/{{item.id}}"> {{ item.title }} </a>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            {% else %}
+              <div class="category black-border border-mid">
+
+                <div class="row">
+
+                  <div class="col-md-4">
+
+                    <a href="/item/{{item.id}}"> {{ item.title }} </a>
+
+                  </div>
+
+                </div>
+
+              </div>
+            {% endif %}
           {% endfor %}
 
         </div>
