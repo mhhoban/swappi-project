@@ -22,13 +22,17 @@
         <div class="col-md-4">
           {% for category in categories %}
             {% if category == categories[0] %}
-              <div class="category black-border border-top">
+              <div class="cat-center black-border border-top">
 
                 <div class="row">
 
                   <div class="col-md-4">
 
-                    <a href="/category/{{category.id}}"> {{ category.name }} </a>
+                    <div class="cat-center-field">
+
+                      <a href="/category/{{category.id}}"> {{ category.name }} </a>
+
+                    </div>
 
                   </div>
 
@@ -38,13 +42,17 @@
 
 
             {% elif category == categories[-1] %}
-              <div class="category black-border border-bottom">
+              <div class="cat-center black-border border-bottom">
 
                 <div class="row">
 
                   <div class="col-md-4">
 
-                    <a href="/category/{{category.id}}"> {{ category.name }} </a>
+                    <div class="cat-center-field">
+
+                      <a href="/category/{{category.id}}"> {{ category.name }} </a>
+
+                    </div>
 
                   </div>
 
@@ -52,14 +60,18 @@
 
               </div>
             {% else %}
-              <div class="category black-border border-mid">
+              <div class="cat-center black-border border-mid">
 
                 <div class="row">
 
                   <div class="col-md-4">
 
-                    <a href="/category/{{category.id}}"> {{ category.name }} </a>
+                    <div class="cat-center-field">
 
+                      <a href="/category/{{category.id}}"> {{ category.name }} </a>
+
+                    </div>
+                    
                   </div>
 
                 </div>

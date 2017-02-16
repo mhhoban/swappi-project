@@ -20,13 +20,17 @@
           {% for category in categories %}
             {% if category == categories[0] %}
 
-            <div class="category black-border border-top">
+            <div class="cat-left black-border border-top">
 
               <div class="row">
 
                 <div class="col-md-4">
 
-                  <a href="/category/{{category.id}}"> {{ category.name }} </a>
+                  <div class="cat-left-field">
+
+                    <a href="/category/{{category.id}}"> {{ category.name }} </a>
+
+                  </div>
 
                 </div>
 
@@ -36,14 +40,17 @@
 
             {% elif category == categories[-1] %}
 
-            <div class="category black-border border-bottom">
+            <div class="cat-left black-border border-bottom">
 
               <div class="row">
 
                 <div class="col-md-4">
 
-                  <a href="/category/{{category.id}}"> {{ category.name }} </a>
+                  <div class="cat-left-field">
 
+                    <a href="/category/{{category.id}}"> {{ category.name }} </a>
+
+                  </div>
                 </div>
 
               </div>
@@ -51,13 +58,17 @@
             </div>
 
             {% else %}
-              <div class="category black-border border-mid">
+              <div class="cat-left black-border border-mid">
 
                 <div class="row">
 
                   <div class="col-md-4">
 
-                    <a href="/category/{{category.id}}"> {{ category.name }} </a>
+                    <div class="cat-left-field">
+
+                      <a href="/category/{{category.id}}"> {{ category.name }} </a>
+
+                    </div>
 
                   </div>
 
@@ -75,13 +86,17 @@
           {% for item in items %}
             {% if item == items[0] %}
 
-              <div class="category black-border border-top">
+              <div class="cat-center black-border border-top">
 
                 <div class="row">
 
                   <div class="col-md-4">
 
-                    <a href="/item/{{item.id}}"> {{ item.title }} </a>
+                    <div class="cat-center-field">
+
+                      <a href="/item/{{item.id}}"> {{ item.title }} </a>
+
+                    </div>
 
                   </div>
 
@@ -91,13 +106,17 @@
 
             {% elif item == items[-1] %}
 
-              <div class="category black-border border-bottom">
+              <div class="cat-center black-border border-bottom">
 
                 <div class="row">
 
                   <div class="col-md-4">
 
-                    <a href="/item/{{item.id}}"> {{ item.title }} </a>
+                    <div class="cat-center-field">
+
+                      <a href="/item/{{item.id}}"> {{ item.title }} </a>
+
+                    </div>
 
                   </div>
 
@@ -106,13 +125,17 @@
               </div>
 
             {% else %}
-              <div class="category black-border border-mid">
+              <div class="cat-center black-border border-mid">
 
                 <div class="row">
 
                   <div class="col-md-4">
 
-                    <a href="/item/{{item.id}}"> {{ item.title }} </a>
+                    <div class="cat-center-field">
+
+                      <a href="/item/{{item.id}}"> {{ item.title }} </a>
+
+                    </div>
 
                   </div>
 

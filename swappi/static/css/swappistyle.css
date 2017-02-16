@@ -12,15 +12,57 @@
 .border-bottom{
   border-width: 2.5px 5px 5px 5px;
 }
-.category {
+.cat-center {
+  text-align: center;
+  color: black;
+  min-height: 2em;
+  margin-left: 0;
+}
+.cat-center-field {
+  padding-left: 2vw;
+
+}
+.cat-center-field a {
+  color: black;
+  font-weight: bold;
+}
+.cat-left {
   text-align: center;
   color: black;
   min-height: 2em;
   margin-right: 0;
 }
-.category a {
+.cat-left-field {
+  padding-left: 2vw;
   color: black;
   font-weight: bold;
+}
+.cat-left-field a {
+  color:black;
+  font-weight:bold;
+}
+.cat-far-left {
+  text-align: center;
+  color: black;
+  min-height: 2em;
+  margin-right: 0;
+}
+.cat-far-left-field {
+  padding-left: 4vw;
+  color: black;
+  font-weight: bold;
+}
+.col-md-4{
+  padding-left: 0;
+  padding-right: 0;
+}
+.item-title{
+  font-size: 2em;
+  font-weight: bold;
+}
+.item-description{
+  font-size: 1.5em;
+  font-weight: lighter;
 }
 .login-status-header {
   text-align: right;
