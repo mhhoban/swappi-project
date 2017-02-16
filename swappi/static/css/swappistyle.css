@@ -47,7 +47,7 @@
   min-height: 2em;
   margin-right: 0;
 }
-.cat-far-left-field {
+.cat-far-left-field a {
   padding-left: 4vw;
   color: black;
   font-weight: bold;
@@ -55,6 +55,9 @@
 .col-md-4{
   padding-left: 0;
   padding-right: 0;
+}
+.item-space {
+  padding-left: 10vw;
 }
 .item-title{
   font-size: 2em;
