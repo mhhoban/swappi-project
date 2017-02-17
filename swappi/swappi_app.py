@@ -49,6 +49,7 @@ def authorization():
     print('in auth func')
 
     gtoken = request.values['idtoken']
+    login_email = False
 
     try:
         idinfo = client.verify_id_token(gtoken, CLIENT_ID)
@@ -56,12 +57,29 @@ def authorization():
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise crypt.AppIdentityError("Wrong issuer.")
 
+        else:
+            login_email = idinfo['email']
+
+
     except crypt.AppIdentityError:
         raise
 
-    login_session['access_token'] = gtoken
-    login_session['user_email'] = idinfo['email']
-    login_session['name'] = idinfo['name']
+    if login_email:
+        user_data = user_utils.check_user_exists(get_db_cursor(), login_email)
+
+        if user_data:
+            login_session['user_email'] = user_data['email']
+            login_session['name'] = user_data['name']
+            login_session['user_id'] = user_data['id']
+
+        else:
+            # TODO add new user info to db
+
+            user_utils.register_new_user(idinfo['name'], idinfo['email'], get_db_cursor())
+
+    # login_session['access_token'] = gtoken
+    # login_session['user_email'] = idinfo['email']
+    # login_session['name'] = idinfo['name']
 
     return make_response(login_session['user_email'] + ' logged in!')
 
@@ -75,6 +93,7 @@ def deauthorization():
             del login_session['access_token']
             del login_session['user_email']
             del login_session['name']
+            del login_session['user_id']
             return make_response('received notice')
 
         except KeyError:
@@ -91,16 +110,6 @@ def showLogin():
     # return "The current session state is %s" % login_session['state']
 
     return render_template('login.html')
-
-
-# @app.route('/testPong', methods=['GET', 'POST'])
-# def testPong():
-#
-#     if request.values['pong'] == 'pongz':
-#         return make_response('pongzzzz')
-#
-#     else:
-#         return make_response('ping')
 
 
 @app.route('/')
@@ -133,6 +142,7 @@ def category_page(category_id):
                            items=items,
                            )
 
+
 @app.route('/item/<int:item_id>')
 def item_page(item_id):
 
@@ -142,6 +152,7 @@ def item_page(item_id):
     item_category = item_data.category.name
     item_title = item_data.title
     item_desc = item_data.description
+    item_poster = item_data.poster.name
 
     categories = session.query(Categories).all()
     items = session.query(Items).filter_by(category_id=item_data.category_id).all()
@@ -152,6 +163,7 @@ def item_page(item_id):
                            item_desc=item_desc,
                            categories=categories,
                            items=items,
+                           item_poster=item_poster,
                            )
 
 
@@ -164,10 +176,12 @@ def item_add():
         item_title = request.form['item_title']
         item_desc = request.form['item_desc']
         item_cat = request.form['item_cat']
+        item_poster = login_session['user_id']
 
         newItem = Items(title=item_title,
                         description=item_desc,
                         category_id=int(item_cat),
+                        poster_id=item_poster,
                         )
         session.add(newItem)
         session.commit()

@@ -55,6 +55,8 @@ class Items(Base):
     category = relationship(Categories)
     title = Column(String(50), nullable=False)
     description = Column(String(250))
+    poster_id = Column(Integer, ForeignKey('users.id'))
+    poster = relationship(Users)
 
     @property
     def serialize(self):

@@ -6,9 +6,9 @@ from db_schema import Base, Categories, Items, Users
 
 class DbSetup:
 
-    def __init__(self, db_uri):
+    def __init__(self):
 
-        self.db_uri = db_uri
+        self.db_uri = 'sqlite:///db/itemcatalog.db'
 
     def db_init(self):
 
@@ -23,6 +23,21 @@ class DbSetup:
         session.query(Users).delete()
         session.query(Categories).delete()
         session.query(Items).delete()
+
+        session.commit()
+
+        # Create Dummy Users
+        session = DBSession()
+
+        new_users = [['John Doe', 'jdoe@mail.thing'],
+                     ['Jon Smith', 'smithy@mail.thing'],
+                     ]
+
+        for user in new_users:
+            newUser = Users(name=user[0],
+                            email=user[1],
+                            )
+            session.add(newUser)
 
         session.commit()
 
@@ -52,6 +67,7 @@ class DbSetup:
             newItem = Items(title=spaceship,
                             description='a thing that flies in space',
                             category_id=1,
+                            poster_id=1,
                             )
             session.add(newItem)
 
@@ -68,6 +84,7 @@ class DbSetup:
             newItem = Items(title=drone,
                             description='a thing that flies and spies',
                             category_id=2,
+                            poster_id=1,
                             )
             session.add(newItem)
 
@@ -84,6 +101,7 @@ class DbSetup:
             newItem = Items(title=time_machine,
                             description='short or long jumps through time',
                             category_id=3,
+                            poster_id=1,
                             )
             session.add(newItem)
 
@@ -99,6 +117,7 @@ class DbSetup:
             newItem = Items(title=hover_board,
                             description='It floats, when walking is too hard',
                             category_id=4,
+                            poster_id=2,
                             )
             session.add(newItem)
 
@@ -114,6 +133,7 @@ class DbSetup:
             newItem = Items(title=jetpack,
                             description='Basically the coolest thing ever',
                             category_id=5,
+                            poster_id=1,
                             )
             session.add(newItem)
 

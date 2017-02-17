@@ -5,15 +5,21 @@ from db_schema import Base, Categories, Items, Users
 
 def check_user_exists(session, email):
     """
-    Checks whether user is currently registered, returns True if registered, False if not
+    Checks whether user is currently registered, returns User info
+    if registered, False if not
     :param session:
     :param email:
     :return:
     """
     user = session.query(Users).filter_by(email=email).one()
+    user_data = {}
 
     if len(user) > 0:
-        return True
+        user_data['id'] = user.id
+        user_data['name'] = user.name
+        user_data['email'] = user.email
+
+        return user_data
 
     else:
         return False
