@@ -202,6 +202,24 @@ def item_add():
         return redirect(url_for('indexPage'))
 
 
+@app.route('/view-listings', methods=['GET', 'POST'])
+def view_item_listings():
+
+    user = user_utils.user_auth_check(login_session)
+    if user:
+        session = get_db_cursor()
+
+        if request.method == 'GET':
+            poster_id = login_session['user_id']
+            items = session.query(Items).filter_by(poster_id=poster_id)
+            return render_template('view_listings.html',
+                                   items=items,
+                                   user=user)
+
+    else:
+        return redirect(url_for('indexPage'))
+
+
 
 if __name__ == '__main__':
     app.secret_key = 'totally_secure'
