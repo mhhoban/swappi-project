@@ -17,14 +17,12 @@
       {% endblock %}
     </head>
 
-
-
     <body>
       <div class="row">
 
         <div class="col-md-6">
           <div class="swappi-logo">
-            <p> Swappi! </p>
+            <a href="/"> Swappi! </a>
           </div>
 
         </div>
@@ -34,11 +32,46 @@
           <div class="login-status-header">
 
             {% block heading %}
+
               {% if user %}
-                <p> Welcome, {{ user }}! </p>
-                <div class="g-signin2 hide"></div>
-                <a href="#" onclick="signOut();">Sign out</a>
-                <a href="add-listing">Add Listing to Swap! </a>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="user-salutation">
+                      Welcome, {{ user }}!
+                    </div>
+
+                    <div class="g-signin2 hide"></div>
+
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-10"></div>
+                  <div class="col-md-2">
+                    <div class="btn-monochrome">
+                      <a href="add-listing">Add Listing to Swap!</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-10"></div>
+                  <div class="col-md-2">
+                    <div class="btn-monochrome">
+                      <a href="view-listings">View Your Listings</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-10"></div>
+                  <div class="col-md-2">
+                    <div class="btn-monochrome">
+                      <a href="#" onclick="signOut();">Sign out</a>
+                    </div>
+                  </div>
+                </div>
+
                 <script>
 
                   function signOut() {
