@@ -51,10 +51,6 @@ def authorization():
     gtoken = request.values['idtoken']
     login_email = False
 
-    import pdb
-
-    pdb.set_trace()
-
     try:
         idinfo = client.verify_id_token(gtoken, CLIENT_ID)
 
@@ -65,15 +61,11 @@ def authorization():
             login_email = idinfo['email']
 
     except crypt.AppIdentityError:
-        print('in login exception')
-        pdb.set_trace()
-        raise
 
-    pdb.set_trace()
+        raise
 
     if login_email:
 
-        pdb.set_trace()
         user_data = user_utils.check_user_exists(get_db_cursor(), login_email)
 
         if user_data:
@@ -82,15 +74,8 @@ def authorization():
             login_session['user_id'] = user_data['id']
 
         else:
-            # TODO add new user info to db
 
             user_utils.register_new_user(idinfo['name'], idinfo['email'], get_db_cursor())
-
-    # login_session['access_token'] = gtoken
-    # login_session['user_email'] = idinfo['email']
-    # login_session['name'] = idinfo['name']
-
-    pdb.set_trace()
 
     return make_response(login_session['user_email'] + ' logged in!')
 
@@ -98,29 +83,18 @@ def authorization():
 @app.route('/deauth', methods=['GET', 'POST'])
 def deauthorization():
 
-    import pdb
-    pdb.set_trace()
     if request.values['logout'] == 'True':
 
         try:
-            pdb.set_trace()
-
             del login_session['user_email']
-            pdb.set_trace()
-
             del login_session['name']
-            pdb.set_trace()
-
             del login_session['user_id']
-            pdb.set_trace()
-
 
             return make_response('received notice')
 
         except KeyError:
 
             return make_response('not logged in')
-    # return make_response('received notice')
 
 
 @app.route('/login')
@@ -153,70 +127,89 @@ def indexPage():
 @app.route('/category/<int:category_id>')
 def category_page(category_id):
 
-    session = get_db_cursor()
-    category_name = (session.query(Categories).filter_by(id=category_id).one()).name
-    categories = session.query(Categories).all()
-    items = session.query(Items).filter_by(category_id=category_id).all()
+    user = user_utils.user_auth_check(login_session)
+    if user:
 
-    return render_template('categories.html',
-                           category_name=category_name,
-                           categories=categories,
-                           items=items,
-                           )
+        session = get_db_cursor()
+        category_name = (session.query(Categories).filter_by(id=category_id).one()).name
+        categories = session.query(Categories).all()
+        items = session.query(Items).filter_by(category_id=category_id).all()
+
+        return render_template('categories.html',
+                               category_name=category_name,
+                               categories=categories,
+                               items=items,
+                               user=user,
+                               )
+    else:
+        return redirect(url_for('indexPage'))
 
 
 @app.route('/item/<int:item_id>')
 def item_page(item_id):
 
-    session = get_db_cursor()
-    item_data = session.query(Items).filter_by(id=item_id).one()
+    user = user_utils.user_auth_check(login_session)
+    if user:
 
-    item_category = item_data.category.name
-    item_title = item_data.title
-    item_desc = item_data.description
-    item_poster = item_data.poster.name
+        session = get_db_cursor()
+        item_data = session.query(Items).filter_by(id=item_id).one()
 
-    categories = session.query(Categories).all()
-    items = session.query(Items).filter_by(category_id=item_data.category_id).all()
-
-    return render_template('items.html',
-                           item_cat=item_category,
-                           item_title=item_title,
-                           item_desc=item_desc,
-                           categories=categories,
-                           items=items,
-                           item_poster=item_poster,
-                           )
-
-
-@app.route('/add-item', methods=['GET', 'POST'])
-def item_add():
-
-    session = get_db_cursor()
-
-    if request.method == 'POST':
-        item_title = request.form['item_title']
-        item_desc = request.form['item_desc']
-        item_cat = request.form['item_cat']
-        item_poster = login_session['user_id']
-
-        newItem = Items(title=item_title,
-                        description=item_desc,
-                        category_id=int(item_cat),
-                        poster_id=item_poster,
-                        )
-        session.add(newItem)
-        session.commit()
-
-        return redirect(url_for('indexPage'))
-
-    else:
+        item_category = item_data.category.name
+        item_title = item_data.title
+        item_desc = item_data.description
+        item_poster = item_data.poster.name
 
         categories = session.query(Categories).all()
+        items = session.query(Items).filter_by(category_id=item_data.category_id).all()
 
-        return render_template('add.html',
+        return render_template('items.html',
+                               item_cat=item_category,
+                               item_title=item_title,
+                               item_desc=item_desc,
                                categories=categories,
+                               items=items,
+                               item_poster=item_poster,
+                               user=user,
                                )
+    else:
+        return redirect(url_for('indexPage'))
+
+
+@app.route('/add-listing', methods=['GET', 'POST'])
+def item_add():
+
+    # check that user is signed in:
+    user = user_utils.user_auth_check(login_session)
+    if user:
+        session = get_db_cursor()
+        if request.method == 'POST':
+            item_title = request.form['item_title']
+            item_desc = request.form['item_desc']
+            item_cat = request.form['item_cat']
+            item_poster = login_session['user_id']
+
+            newItem = Items(title=item_title,
+                            description=item_desc,
+                            category_id=int(item_cat),
+                            poster_id=item_poster,
+                            )
+            session.add(newItem)
+            session.commit()
+
+            return redirect(url_for('indexPage'))
+
+        else:
+
+            categories = session.query(Categories).all()
+            user = user_utils.user_auth_check(login_session)
+
+            return render_template('add.html',
+                                   categories=categories,
+                                   user=user,
+                                   )
+    else:
+        return redirect(url_for('indexPage'))
+
 
 
 if __name__ == '__main__':
