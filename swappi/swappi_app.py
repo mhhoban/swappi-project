@@ -125,51 +125,45 @@ def indexPage():
 def category_page(category_id):
 
     user = user_utils.user_auth_check(login_session)
-    if user:
 
-        session = get_db_cursor()
-        category_name = (session.query(Categories).filter_by(id=category_id).one()).name
-        categories = session.query(Categories).all()
-        items = session.query(Items).filter_by(category_id=category_id).all()
+    session = get_db_cursor()
+    category_name = (session.query(Categories).filter_by(id=category_id).one()).name
+    categories = session.query(Categories).all()
+    items = session.query(Items).filter_by(category_id=category_id).all()
 
-        return render_template('categories.html',
-                               category_name=category_name,
-                               categories=categories,
-                               items=items,
-                               user=user,
-                               )
-    else:
-        return redirect(url_for('indexPage'))
+    return render_template('categories.html',
+                           category_name=category_name,
+                           categories=categories,
+                           items=items,
+                           user=user,
+                           )
 
 
 @app.route('/item/<int:item_id>')
 def item_page(item_id):
 
     user = user_utils.user_auth_check(login_session)
-    if user:
 
-        session = get_db_cursor()
-        item_data = session.query(Items).filter_by(id=item_id).one()
+    session = get_db_cursor()
+    item_data = session.query(Items).filter_by(id=item_id).one()
 
-        item_category = item_data.category.name
-        item_title = item_data.title
-        item_desc = item_data.description
-        item_poster = item_data.poster.name
+    item_category = item_data.category.name
+    item_title = item_data.title
+    item_desc = item_data.description
+    item_poster = item_data.poster.name
 
-        categories = session.query(Categories).all()
-        items = session.query(Items).filter_by(category_id=item_data.category_id).all()
+    categories = session.query(Categories).all()
+    items = session.query(Items).filter_by(category_id=item_data.category_id).all()
 
-        return render_template('items.html',
-                               item_cat=item_category,
-                               item_title=item_title,
-                               item_desc=item_desc,
-                               categories=categories,
-                               items=items,
-                               item_poster=item_poster,
-                               user=user,
-                               )
-    else:
-        return redirect(url_for('indexPage'))
+    return render_template('items.html',
+                           item_cat=item_category,
+                           item_title=item_title,
+                           item_desc=item_desc,
+                           categories=categories,
+                           items=items,
+                           item_poster=item_poster,
+                           user=user,
+                           )
 
 
 @app.route('/add-listing', methods=['GET', 'POST'])
