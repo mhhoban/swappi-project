@@ -23,12 +23,6 @@ APPLICATION_NAME = "Swappi"
 app.config['SQL_DB_URI'] = 'sqlite:///db/itemcatalog.db'
 
 
-# # TODO: move db init to setup.py
-# def db_init():
-#     _db_setup = db_setup.DbSetup(app.config['SQL_DB_URI'])
-#     _db_setup.db_init()
-
-
 def get_db_cursor():
     """
     creates and returns the DBsession
@@ -77,7 +71,10 @@ def authorization():
 
             user_utils.register_new_user(idinfo['name'], idinfo['email'], get_db_cursor())
 
-    return make_response(login_session['user_email'] + ' logged in!')
+        return make_response('valid')
+
+    else:
+        return make_response('invalid')
 
 
 @app.route('/deauth', methods=['GET', 'POST'])
@@ -90,7 +87,7 @@ def deauthorization():
             del login_session['name']
             del login_session['user_id']
 
-            return make_response('received notice')
+            return make_response('success')
 
         except KeyError:
 

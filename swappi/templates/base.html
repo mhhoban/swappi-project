@@ -53,7 +53,9 @@
                         if (xhr.readyState == 4) {
                           console.log(xhr.readyState);
                           console.log(this.responseText);
-                          window.location.reload();
+                          if (this.responseText == 'success'){
+                            window.location.reload();
+                          }
                         }
                       };
                     });
@@ -78,7 +80,9 @@
                       if (xhr.readyState == 4){
                         console.log(xhr.readyState)
                         console.log('Signed in as: ' + xhr.responseText);
-                        window.location.reload();
+                        if (this.responseText == 'valid'){
+                          window.location.reload();
+                        }
                       }
                     };
                     xhr.send('idtoken=' + id_token);

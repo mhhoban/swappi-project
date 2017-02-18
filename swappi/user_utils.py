@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db_schema import Base, Categories, Items, Users
+from sqlalchemy.orm.exc import NoResultFound
 
 
 def check_user_exists(session, email):
@@ -12,21 +13,18 @@ def check_user_exists(session, email):
     :return:
     """
 
-    # TODO re-write as try/except
+    try:
+        user = session.query(Users).filter_by(email=email).one()
 
-    user = session.query(Users).filter_by(email=email).all()
+        user_data = {}
 
-    user_data = {}
-
-    if len(user) > 0:
-        user = user[0]
         user_data['id'] = user.id
         user_data['name'] = user.name
         user_data['email'] = user.email
 
         return user_data
 
-    else:
+    except NoResultFound:
         return False
 
 
