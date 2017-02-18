@@ -220,6 +220,60 @@ def view_item_listings():
         return redirect(url_for('indexPage'))
 
 
+@app.route('/edit-item/<int:item_id>', methods=['GET', 'POST'])
+def edit_item(item_id):
+
+    user = user_utils.user_auth_check(login_session)
+    if user:
+
+        session = get_db_cursor()
+        try:
+            item = session.query(Items).filter_by(id=item_id).one()
+        except:
+            return redirect(url_for('indexPage'))
+
+        if item.poster_id == login_session['user_id']:
+
+            return render_template('edit_item.html',
+                                   user=user,
+                                   item=item,
+                                   )
+
+        else:
+            return redirect(url_for('indexPage'))
+
+
+    else:
+        return redirect(url_for('indexPage'))
+
+
+@app.route('/delete-item/<int:item_id>', methods=['GET', 'POST'])
+def delete_item(item_id)
+
+    user = user_utils.user_auth_check(login_session)
+    if user:
+
+        session = get_db_cursor()
+        try:
+            item = session.query(Items).filter_by(id=item_id).one()
+        except:
+            return redirect(url_for('indexPage'))
+
+        if item.poster_id == login_session['user_id']:
+
+            return render_template('delete_item.html',
+                                   user=user,
+                                   item=item,
+                                   )
+
+        else:
+            return redirect(url_for('indexPage'))
+
+
+    else:
+        return redirect(url_for('indexPage'))
+
+
 
 if __name__ == '__main__':
     app.secret_key = 'totally_secure'
