@@ -49,8 +49,11 @@
                       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                       xhr.send('logout=True')
                       xhr.onreadystatechange = function () {
-                        console.log(this.responseText);
-                        window.location.reload();
+                        if (xhr.readyState == 4) {
+                          console.log(xhr.readyState);
+                          console.log(this.responseText);
+                          window.location.reload();
+                        }
                       };
                     });
                   }
@@ -69,10 +72,13 @@
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/auth');
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    xhr.onload = function() {
-                      console.log('Signed in as: ' + xhr.responseText);
-                      window.location='http://localhost:8080';
+                    xhr.onreadystatechange = function() {
 
+                      if (xhr.readyState == 4){
+                        console.log(xhr.readyState)
+                        console.log('Signed in as: ' + xhr.responseText);
+                        window.location.reload();
+                      }
                     };
                     xhr.send('idtoken=' + id_token);
 

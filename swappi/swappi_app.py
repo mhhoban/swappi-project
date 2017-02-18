@@ -51,6 +51,10 @@ def authorization():
     gtoken = request.values['idtoken']
     login_email = False
 
+    import pdb
+
+    pdb.set_trace()
+
     try:
         idinfo = client.verify_id_token(gtoken, CLIENT_ID)
 
@@ -60,11 +64,16 @@ def authorization():
         else:
             login_email = idinfo['email']
 
-
     except crypt.AppIdentityError:
+        print('in login exception')
+        pdb.set_trace()
         raise
 
+    pdb.set_trace()
+
     if login_email:
+
+        pdb.set_trace()
         user_data = user_utils.check_user_exists(get_db_cursor(), login_email)
 
         if user_data:
@@ -81,24 +90,37 @@ def authorization():
     # login_session['user_email'] = idinfo['email']
     # login_session['name'] = idinfo['name']
 
+    pdb.set_trace()
+
     return make_response(login_session['user_email'] + ' logged in!')
 
 
 @app.route('/deauth', methods=['GET', 'POST'])
 def deauthorization():
 
+    import pdb
+    pdb.set_trace()
     if request.values['logout'] == 'True':
 
         try:
-            del login_session['access_token']
+            pdb.set_trace()
+
             del login_session['user_email']
+            pdb.set_trace()
+
             del login_session['name']
+            pdb.set_trace()
+
             del login_session['user_id']
+            pdb.set_trace()
+
+
             return make_response('received notice')
 
         except KeyError:
 
             return make_response('not logged in')
+    # return make_response('received notice')
 
 
 @app.route('/login')

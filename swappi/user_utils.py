@@ -11,10 +11,15 @@ def check_user_exists(session, email):
     :param email:
     :return:
     """
-    user = session.query(Users).filter_by(email=email).one()
+
+    # TODO re-write as try/except
+
+    user = session.query(Users).filter_by(email=email).all()
+
     user_data = {}
 
     if len(user) > 0:
+        user = user[0]
         user_data['id'] = user.id
         user_data['name'] = user.name
         user_data['email'] = user.email
