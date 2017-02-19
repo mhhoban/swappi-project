@@ -236,13 +236,15 @@ def edit_item(item_id):
         session = get_db_cursor()
         try:
             item = session.query(Items).filter_by(id=item_id).one()
+            categories = session.query(Categories).all()
         except ValueError:
             return redirect(url_for('indexPage'))
 
         if item.poster_id == login_session['user_id']:
 
-            return render_template('edit_item.html',
+            return render_template('item_edit.html',
                                    user=user,
+                                   categories=categories,
                                    item=item,
                                    )
 
@@ -279,7 +281,6 @@ def delete_item(item_id):
 
     else:
         return redirect(url_for('indexPage'))
-
 
 
 if __name__ == '__main__':
