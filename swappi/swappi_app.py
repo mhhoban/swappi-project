@@ -290,20 +290,42 @@ def delete_item(item_id):
     if user:
 
         session = get_db_cursor()
-        try:
-            item = session.query(Items).filter_by(id=item_id).one()
-        except:
-            return redirect(url_for('indexPage'))
 
-        if item.poster_id == login_session['user_id']:
+        if request.method == 'POST':
 
-            return render_template('delete_item.html',
-                                   user=user,
-                                   item=item,
-                                   )
+            if request.form['action'] == 'terminate':
+
+                try:
+                    item_exists = session.query(Items).filter_by(id=item_id).one()
+                    delete = session.query(Items).filter_by(id=item_id).\
+                        delete(synchronize_session=False)
+                    session.commit()
+
+                    return redirect(url_for('indexPage'))
+
+                except ValueError:
+                    return redirect(url_for('indexPage'))
+
+            else:
+                return redirect(url_for('indexPage'))
+
 
         else:
-            return redirect(url_for('indexPage'))
+
+            try:
+                item = session.query(Items).filter_by(id=item_id).one()
+            except ValueError:
+                return redirect(url_for('indexPage'))
+
+            if item.poster_id == login_session['user_id']:
+
+                return render_template('item_delete.html',
+                                       user=user,
+                                       item=item,
+                                       )
+
+            else:
+                return redirect(url_for('indexPage'))
 
 
     else:
