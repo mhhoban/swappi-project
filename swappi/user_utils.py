@@ -40,11 +40,31 @@ def register_new_user(name, email, session):
 
 def user_auth_check(login_session):
 
+    user = {}
+
     try:
-        user = login_session['user_email']
+        user['email'] = login_session['user_email']
+        user['id'] = login_session['user_id']
 
     except KeyError:
         user = False
 
     return user
+
+
+def user_owner_check(user_data, item_id, session):
+
+    if user_data:
+
+        item = session.query(Items).filter_by(id=item_id).one()
+        item_owner = item.poster_id
+
+        if item_owner == user_data['id']:
+            return True
+
+        else:
+            return False
+
+    else:
+        return False
 

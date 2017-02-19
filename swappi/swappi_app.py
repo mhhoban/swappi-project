@@ -143,10 +143,12 @@ def category_page(category_id):
 def item_page(item_id):
 
     user = user_utils.user_auth_check(login_session)
+    owner = user_utils.user_owner_check(user, item_id, get_db_cursor())
 
     session = get_db_cursor()
     item_data = session.query(Items).filter_by(id=item_id).one()
 
+    item_id = item_data.id
     item_category = item_data.category.name
     item_title = item_data.title
     item_desc = item_data.description
@@ -157,6 +159,7 @@ def item_page(item_id):
     items = session.query(Items).filter_by(category_id=item_data.category_id).all()
 
     return render_template('items.html',
+                           item_id=item_id,
                            item_cat=item_category,
                            item_title=item_title,
                            item_desc=item_desc,
@@ -165,6 +168,7 @@ def item_page(item_id):
                            item_poster=item_poster,
                            user=user,
                            swap_for=swap_for,
+                           owner=owner,
                            )
 
 

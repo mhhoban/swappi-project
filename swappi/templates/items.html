@@ -175,6 +175,16 @@
 
                   </div>
 
+                  {% if owner %}
+
+                    <div class="item-view-edit">
+                      <a href="/edit-item/{{item_id}}"><button> Edit Item </button></a>
+                      <a href="/delete-item/{{item_id}}"><button> Delete Item </button></a>
+
+                    </div>
+
+                  {% endif %}
+
                 </div>
 
               </div>
