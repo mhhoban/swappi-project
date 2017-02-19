@@ -234,22 +234,49 @@ def edit_item(item_id):
     if user:
 
         session = get_db_cursor()
-        try:
-            item = session.query(Items).filter_by(id=item_id).one()
-            categories = session.query(Categories).all()
-        except ValueError:
-            return redirect(url_for('indexPage'))
 
-        if item.poster_id == login_session['user_id']:
+        if request.method == 'POST':
 
-            return render_template('item_edit.html',
-                                   user=user,
-                                   categories=categories,
-                                   item=item,
-                                   )
+            try:
+                item = session.query(Items).filter_by(id=item_id).one()
+
+                u_item_title = request.form['item_title']
+                u_item_cat = request.form['item_cat']
+                u_item_desc = request.form['item_desc']
+                u_item_swap = request.form['swap_item_for']
+
+                update = session.query(Items).filter(Items.id == item_id).\
+                    update({Items.title: u_item_title,
+                            Items.category_id: u_item_cat,
+                            Items.description: u_item_desc,
+                            Items.swap_for: u_item_swap},
+                           synchronize_session=False)
+
+                session.commit()
+
+                return redirect(url_for('indexPage'))
+
+            except ValueError:
+                return redirect(url_for('indexPage'))
 
         else:
-            return redirect(url_for('indexPage'))
+
+            try:
+                item = session.query(Items).filter_by(id=item_id).one()
+                categories = session.query(Categories).all()
+            except ValueError:
+                return redirect(url_for('indexPage'))
+
+            if item.poster_id == login_session['user_id']:
+
+                return render_template('item_edit.html',
+                                       user=user,
+                                       categories=categories,
+                                       item=item,
+                                       )
+
+            else:
+                return redirect(url_for('indexPage'))
 
 
     else:
