@@ -173,13 +173,16 @@ def item_add():
 
     # check that user is signed in:
     user = user_utils.user_auth_check(login_session)
+
     if user:
         session = get_db_cursor()
+
         if request.method == 'POST':
+
             item_title = request.form['item_title']
             item_desc = request.form['item_desc']
             item_cat = request.form['item_cat']
-            item_swap = request.form['item_swap_for']
+            item_swap = request.form['swap_item_for']
             item_poster = login_session['user_id']
 
             newItem = Items(title=item_title,
