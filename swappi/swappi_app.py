@@ -37,6 +37,38 @@ def get_db_cursor():
     return session
 
 
+def check_item_exists(item_id):
+    """
+    checks whether the specified item exists before trying to load it.
+    :param item_id:
+    :return: True/False
+    """
+
+    session = get_db_cursor()
+
+    try:
+        item = session.query(Items).filter_by(id=item_id).one()
+        return True
+    except ValueError:
+        return False
+
+
+def check_category_exists(cat_id):
+    """
+    checks whether the specified category exists before trying to load it.
+    :param item_id:
+    :return: True/False
+    """
+
+    session = get_db_cursor()
+
+    try:
+        cat = session.query(Categories).filter_by(id=cat_id).one()
+        return True
+    except ValueError:
+        return False
+
+
 @app.route('/auth', methods=['GET', 'POST'])
 def authorization():
 
@@ -124,52 +156,66 @@ def indexPage():
 @app.route('/category/<int:category_id>')
 def category_page(category_id):
 
-    user = user_utils.user_auth_check(login_session)
+    category_exists = check_category_exists(category_id)
 
-    session = get_db_cursor()
-    category_name = (session.query(Categories).filter_by(id=category_id).one()).name
-    categories = session.query(Categories).all()
-    items = session.query(Items).filter_by(category_id=category_id).all()
+    if category_exists:
 
-    return render_template('categories.html',
-                           category_name=category_name,
-                           categories=categories,
-                           items=items,
-                           user=user,
-                           )
+        user = user_utils.user_auth_check(login_session)
+
+        session = get_db_cursor()
+        category_name = (session.query(Categories).filter_by(id=category_id).one()).name
+        categories = session.query(Categories).all()
+        items = session.query(Items).filter_by(category_id=category_id).all()
+
+        return render_template('categories.html',
+                               category_name=category_name,
+                               categories=categories,
+                               items=items,
+                               user=user,
+                               )
+
+    else:
+        return redirect(url_for('indexPage'))
 
 
 @app.route('/item/<int:item_id>')
 def item_page(item_id):
 
-    user = user_utils.user_auth_check(login_session)
-    owner = user_utils.user_owner_check(user, item_id, get_db_cursor())
+    item_exists = check_item_exists(item_id)
 
-    session = get_db_cursor()
-    item_data = session.query(Items).filter_by(id=item_id).one()
+    if item_exists:
 
-    item_id = item_data.id
-    item_category = item_data.category.name
-    item_title = item_data.title
-    item_desc = item_data.description
-    item_poster = item_data.poster.name
-    swap_for = item_data.swap_for
+        user = user_utils.user_auth_check(login_session)
+        owner = user_utils.user_owner_check(user, item_id, get_db_cursor())
 
-    categories = session.query(Categories).all()
-    items = session.query(Items).filter_by(category_id=item_data.category_id).all()
+        session = get_db_cursor()
+        item_data = session.query(Items).filter_by(id=item_id).one()
 
-    return render_template('items.html',
-                           item_id=item_id,
-                           item_cat=item_category,
-                           item_title=item_title,
-                           item_desc=item_desc,
-                           categories=categories,
-                           items=items,
-                           item_poster=item_poster,
-                           user=user,
-                           swap_for=swap_for,
-                           owner=owner,
-                           )
+        item_id = item_data.id
+        item_category = item_data.category.name
+        item_title = item_data.title
+        item_desc = item_data.description
+        item_poster = item_data.poster.name
+        swap_for = item_data.swap_for
+
+        categories = session.query(Categories).all()
+        items = session.query(Items).filter_by(category_id=item_data.category_id).all()
+
+        return render_template('items.html',
+                               item_id=item_id,
+                               item_cat=item_category,
+                               item_title=item_title,
+                               item_desc=item_desc,
+                               categories=categories,
+                               items=items,
+                               item_poster=item_poster,
+                               user=user,
+                               swap_for=swap_for,
+                               owner=owner,
+                               )
+
+    else:
+        return redirect(url_for('indexPage'))
 
 
 @app.route('/add-listing', methods=['GET', 'POST'])
@@ -286,7 +332,7 @@ def edit_item(item_id):
                     return redirect(url_for('indexPage'))
 
         else:
-        # if ownership is rejected
+            # if ownership is rejected
             return redirect(url_for('indexPage'))
 
 
@@ -323,7 +369,6 @@ def delete_item(item_id):
 
                 else:
                     return redirect(url_for('indexPage'))
-
 
             else:
 
