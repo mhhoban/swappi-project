@@ -151,6 +151,7 @@ def item_page(item_id):
     item_title = item_data.title
     item_desc = item_data.description
     item_poster = item_data.poster.name
+    swap_for = item_data.swap_for
 
     categories = session.query(Categories).all()
     items = session.query(Items).filter_by(category_id=item_data.category_id).all()
@@ -163,6 +164,7 @@ def item_page(item_id):
                            items=items,
                            item_poster=item_poster,
                            user=user,
+                           swap_for=swap_for,
                            )
 
 
@@ -177,12 +179,14 @@ def item_add():
             item_title = request.form['item_title']
             item_desc = request.form['item_desc']
             item_cat = request.form['item_cat']
+            item_swap = request.form['item_swap_for']
             item_poster = login_session['user_id']
 
             newItem = Items(title=item_title,
                             description=item_desc,
                             category_id=int(item_cat),
                             poster_id=item_poster,
+                            swap_for=item_swap,
                             )
             session.add(newItem)
             session.commit()
@@ -229,7 +233,7 @@ def edit_item(item_id):
         session = get_db_cursor()
         try:
             item = session.query(Items).filter_by(id=item_id).one()
-        except:
+        except ValueError:
             return redirect(url_for('indexPage'))
 
         if item.poster_id == login_session['user_id']:
@@ -248,7 +252,7 @@ def edit_item(item_id):
 
 
 @app.route('/delete-item/<int:item_id>', methods=['GET', 'POST'])
-def delete_item(item_id)
+def delete_item(item_id):
 
     user = user_utils.user_auth_check(login_session)
     if user:

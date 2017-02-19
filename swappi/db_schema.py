@@ -57,6 +57,7 @@ class Items(Base):
     description = Column(String(250))
     poster_id = Column(Integer, ForeignKey('users.id'))
     poster = relationship(Users)
+    swap_for = Column(String(100), nullable=False)
 
     @property
     def serialize(self):

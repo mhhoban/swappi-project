@@ -68,6 +68,7 @@ class DbSetup:
                             description='a thing that flies in space',
                             category_id=1,
                             poster_id=1,
+                            swap_for="a pony"
                             )
             session.add(newItem)
 
@@ -85,12 +86,12 @@ class DbSetup:
                             description='a thing that flies and spies',
                             category_id=2,
                             poster_id=1,
+                            swap_for="two ponies"
                             )
             session.add(newItem)
 
         session.commit()
         session = DBSession()
-
 
         new_time_machines = ['Wells IX',
                              'Brown C',
@@ -102,6 +103,7 @@ class DbSetup:
                             description='short or long jumps through time',
                             category_id=3,
                             poster_id=1,
+                            swap_for="A clarinet."
                             )
             session.add(newItem)
 
@@ -118,6 +120,7 @@ class DbSetup:
                             description='It floats, when walking is too hard',
                             category_id=4,
                             poster_id=2,
+                            swap_for='a Pink Hoverboard'
                             )
             session.add(newItem)
 
@@ -134,6 +137,7 @@ class DbSetup:
                             description='Basically the coolest thing ever',
                             category_id=5,
                             poster_id=1,
+                            swap_for='beesmans gum',
                             )
             session.add(newItem)
 
