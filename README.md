@@ -33,6 +33,10 @@ python swappi/swappi_app.py
 from the project's root directory, then access the web app through your browser
 at `localhost:8080` .
 
+##JSON Endpoint
+In addition to viewing pages for listed items, they can also obtain a JSON endpoint
+at {domain}/json-item/{item-id}
+
 ##License
 
 Project is freely open source under the terms of the
