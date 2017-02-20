@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html>
+  <div class="container-fluid">
+
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+      <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css') }}">
+      <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/swappistyle.css') }}">
+      <meta name="google-signin-client_id" content="973477618863-32d60mluresdss1melcrqmpui0qiq3p4.apps.googleusercontent.com">
+
+      {% block header_block %}
+      {% endblock %}
+    </head>
+
+    <body>
+      <div class="row">
+
+        <div class="col-md-6">
+          <div class="swappi-logo">
+            <a href="/"> Swappi! </a>
+          </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+          <div class="login-status-header">
+
+            {% block heading %}
+
+              {% if user %}
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="user-salutation">
+                      Welcome, {{ user.email }}!
+                    </div>
+
+                    <div class="g-signin2 hide"></div>
+
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-10"></div>
+                  <div class="col-md-2">
+                    <div class="btn-monochrome">
+                      <a href="/add-listing">Add Listing to Swap!</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-10"></div>
+                  <div class="col-md-2">
+                    <div class="btn-monochrome">
+                      <a href="/view-listings">View Your Listings</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-10"></div>
+                  <div class="col-md-2">
+                    <div class="btn-monochrome">
+                      <a href="#" onclick="signOut();">Sign out</a>
+                    </div>
+                  </div>
+                </div>
+
+                <script>
+
+                  function signOut() {
+
+                    var auth2 = gapi.auth2.getAuthInstance();
+                    auth2.signOut().then(function () {
+                      var xhr = new XMLHttpRequest();
+                      xhr.open('POST', '/deauth');
+                      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                      xhr.send('logout=True')
+                      xhr.onreadystatechange = function () {
+                        if (xhr.readyState == 4) {
+                          console.log(xhr.readyState);
+                          console.log(this.responseText);
+                          if (this.responseText == 'success'){
+                            window.location.reload();
+                          }
+                        }
+                      };
+                    });
+                  }
+
+                </script>
+              {% else %}
+
+                <p> Welcome, Guest! </p>
+                <div class="login-button">
+                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                </div>
+                <script>
+                  function onSignIn(googleUser) {
+                    var id_token = googleUser.getAuthResponse().id_token;
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/auth');
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.onreadystatechange = function() {
+
+                      if (xhr.readyState == 4){
+                        console.log(xhr.readyState)
+                        console.log('Signed in as: ' + xhr.responseText);
+                        if (this.responseText == 'valid'){
+                          window.location.reload();
+                        }
+                      }
+                    };
+                    xhr.send('idtoken=' + id_token);
+
+                  }
+
+                </script>
+              {% endif %}
+            {% endblock %}
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+      {% block content_block %}
+      {% endblock %}
+    </body>
+
+  </div>
+
+</html>

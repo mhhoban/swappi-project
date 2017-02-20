@@ -1,0 +1,100 @@
+.black-border{
+  border-style: solid;
+  border-width: 2.5px 5px 2.5px 5px;
+  border-color: black;
+}
+.border-top{
+  border-width: 5px 5px 2.5px 5px;
+}
+.border-mid{
+  border-width: 2.5px 5px 2.5px 5px;
+}
+.border-bottom{
+  border-width: 2.5px 5px 5px 5px;
+}
+.btn-monochrome{
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  border-radius: .5px;
+}
+.btn-monochrome a {
+  font-size: .75em;
+  color: black;
+}
+.cat-center {
+  color: black;
+  min-height: 2em;
+  margin-left: 0;
+}
+.cat-center-field {
+  padding-left: 2vw;
+
+}
+.cat-center-field a {
+  color: black;
+  font-weight: bold;
+  white-space: nowrap;
+}
+.cat-left {
+  color: black;
+  min-height: 2em;
+  margin-right: 0;
+}
+.cat-left-field {
+  padding-left: 2vw;
+  color: black;
+  font-weight: bold;
+}
+.cat-left-field a {
+  color:black;
+  font-weight:bold;
+  white-space: nowrap;
+}
+.cat-far-left {
+  color: black;
+  min-height: 2em;
+  margin-right: 0;
+}
+.cat-far-left-field a {
+  padding-left: 4vw;
+  color: black;
+  font-weight: bold;
+  white-space: nowrap;
+}
+.col-md-3{
+  padding-left: 0;
+  padding-right: 0;
+}
+.col-md-4{
+  padding-left: 0;
+  padding-right: 0;
+}
+.item-space {
+  padding-left: 10vw;
+}
+.item-title{
+  font-size: 2em;
+  font-weight: bold;
+}
+.item-description{
+  font-size: 1.5em;
+  font-weight: lighter;
+}
+.login-status-header {
+  text-align: right;
+}
+.login-button {
+  margin-left: 80%;
+}
+.swappi-logo a {
+  font-size: 3em;
+  font-weight: bold;
+  color: black;
+}
+.hide {
+  display: none;
+}
+.user-salutation {
+  font-weight: bold;
+}
