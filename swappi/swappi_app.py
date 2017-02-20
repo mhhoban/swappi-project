@@ -427,6 +427,33 @@ def delete_item(item_id):
         return redirect(url_for('indexPage'))
 
 
+@app.route('/json-item/<int:item_id>')
+def item_json_page(item_id):
+    """
+    displays all categories, items within selected category,
+    and the information about the selected item.
+    :param item_id:
+    :return:
+    """
+
+    item_exists = check_item_exists(item_id)
+
+    if item_exists:
+
+        session = get_db_cursor()
+        item_data = session.query(Items).filter_by(id=item_id).one()
+
+        return json.dumps({'item_id': item_data.id,
+                           'item_category': item_data.category.name,
+                           'item_title': item_data.title,
+                           'item_description': item_data.description,
+                           'posted_by': item_data.poster.name,
+                           'swap for': item_data.swap_for})
+
+    else:
+        return redirect(url_for('indexPage'))
+
+
 if __name__ == '__main__':
     app.secret_key = 'totally_secure'
     app.debug = True
