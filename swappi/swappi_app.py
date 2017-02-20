@@ -1,17 +1,13 @@
+from db_schema import Base, Categories, Items
 from flask import Flask, render_template, request, redirect, url_for
 from flask import session as login_session
+from flask import make_response
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from db_schema import Base, Categories, Items, Users
 from oauth2client import client, crypt
+from sqlalchemy.orm import sessionmaker
+
 
 import json
-
-from flask import make_response
-import requests
-
-import random
-import string
 import user_utils
 
 app = Flask(__name__)
@@ -71,6 +67,10 @@ def check_category_exists(cat_id):
 
 @app.route('/auth', methods=['GET', 'POST'])
 def authorization():
+    """
+    Handles authorizing a user based on the data received from Google.
+    :return:
+    """
 
     print('in auth func')
 
@@ -80,7 +80,8 @@ def authorization():
     try:
         idinfo = client.verify_id_token(gtoken, CLIENT_ID)
 
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+        if idinfo['iss'] not in ['accounts.google.com',
+                                 'https://accounts.google.com']:
             raise crypt.AppIdentityError("Wrong issuer.")
 
         else:
@@ -101,7 +102,8 @@ def authorization():
 
         else:
 
-            user_utils.register_new_user(idinfo['name'], idinfo['email'], get_db_cursor())
+            user_utils.register_new_user(idinfo['name'], idinfo['email'],
+                                         get_db_cursor())
 
         return make_response('valid')
 
@@ -111,6 +113,10 @@ def authorization():
 
 @app.route('/deauth', methods=['GET', 'POST'])
 def deauthorization():
+    """
+    Logs a user out of the system.
+    :return:
+    """
 
     if request.values['logout'] == 'True':
 
@@ -126,19 +132,12 @@ def deauthorization():
             return make_response('not logged in')
 
 
-@app.route('/login')
-def showLogin():
-
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                    for x in xrange(32))
-    login_session['state'] = state
-    # return "The current session state is %s" % login_session['state']
-
-    return render_template('login.html')
-
-
 @app.route('/')
 def indexPage():
+    """
+    Displays main index page.
+    :return:
+    """
 
     session = get_db_cursor()
     categories = session.query(Categories).all()
@@ -155,6 +154,11 @@ def indexPage():
 
 @app.route('/category/<int:category_id>')
 def category_page(category_id):
+    """
+    displays list of items within selected category.
+    :param category_id:
+    :return:
+    """
 
     category_exists = check_category_exists(category_id)
 
@@ -163,9 +167,11 @@ def category_page(category_id):
         user = user_utils.user_auth_check(login_session)
 
         session = get_db_cursor()
-        category_name = (session.query(Categories).filter_by(id=category_id).one()).name
+        category_name = (session.query(Categories).filter_by(
+            id=category_id).one()).name
         categories = session.query(Categories).all()
-        items = session.query(Items).filter_by(category_id=category_id).all()
+        items = session.query(Items).filter_by(
+            category_id=category_id).all()
 
         return render_template('categories.html',
                                category_name=category_name,
@@ -180,6 +186,12 @@ def category_page(category_id):
 
 @app.route('/item/<int:item_id>')
 def item_page(item_id):
+    """
+    displays all categories, items within selected category,
+    and the information about the selected item.
+    :param item_id:
+    :return:
+    """
 
     item_exists = check_item_exists(item_id)
 
@@ -199,7 +211,8 @@ def item_page(item_id):
         swap_for = item_data.swap_for
 
         categories = session.query(Categories).all()
-        items = session.query(Items).filter_by(category_id=item_data.category_id).all()
+        items = session.query(Items).filter_by(
+            category_id=item_data.category_id).all()
 
         return render_template('items.html',
                                item_id=item_id,
@@ -220,6 +233,10 @@ def item_page(item_id):
 
 @app.route('/add-listing', methods=['GET', 'POST'])
 def item_add():
+    """
+    lets logged in user add new items to the item databse.
+    :return:
+    """
 
     # check that user is signed in:
     user = user_utils.user_auth_check(login_session)
@@ -261,6 +278,11 @@ def item_add():
 
 @app.route('/view-listings', methods=['GET', 'POST'])
 def view_item_listings():
+    """
+    returns list of all items a user has posted with
+    options to edit or delete each one.
+    :return:
+    """
 
     user = user_utils.user_auth_check(login_session)
     if user:
@@ -279,6 +301,11 @@ def view_item_listings():
 
 @app.route('/edit-item/<int:item_id>', methods=['GET', 'POST'])
 def edit_item(item_id):
+    """
+    lets user edit an item they have posted.
+    :param item_id:
+    :return:
+    """
 
     user = user_utils.user_auth_check(login_session)
     if user:
@@ -335,13 +362,17 @@ def edit_item(item_id):
             # if ownership is rejected
             return redirect(url_for('indexPage'))
 
-
     else:
         return redirect(url_for('indexPage'))
 
 
 @app.route('/delete-item/<int:item_id>', methods=['GET', 'POST'])
 def delete_item(item_id):
+    """
+    lets user delete an item they have posted.
+    :param item_id:
+    :return:
+    """
 
     user = user_utils.user_auth_check(login_session)
     if user:
@@ -357,9 +388,10 @@ def delete_item(item_id):
                 if request.form['action'] == 'terminate':
 
                     try:
-                        item_exists = session.query(Items).filter_by(id=item_id).one()
-                        delete = session.query(Items).filter_by(id=item_id).\
-                            delete(synchronize_session=False)
+                        item_exists = session.query(Items).filter_by(
+                            id=item_id).one()
+                        delete = session.query(Items).filter_by(
+                            id=item_id).delete(synchronize_session=False)
                         session.commit()
 
                         return redirect(url_for('indexPage'))
@@ -388,9 +420,8 @@ def delete_item(item_id):
                     return redirect(url_for('indexPage'))
 
         else:
-        # if ownership is rejected
+            # if ownership is rejected
             return redirect(url_for('indexPage'))
-
 
     else:
         return redirect(url_for('indexPage'))

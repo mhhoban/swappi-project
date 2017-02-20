@@ -19,7 +19,7 @@ class DbSetup:
         DBSession = sessionmaker(bind=engine)
         session = DBSession()
 
-        # drop any exisitng data
+        # drop any existing data
         session.query(Users).delete()
         session.query(Categories).delete()
         session.query(Items).delete()
@@ -68,7 +68,7 @@ class DbSetup:
                             description='a thing that flies in space',
                             category_id=1,
                             poster_id=1,
-                            swap_for="a pony"
+                            swap_for="A pony."
                             )
             session.add(newItem)
 
@@ -86,7 +86,7 @@ class DbSetup:
                             description='a thing that flies and spies',
                             category_id=2,
                             poster_id=1,
-                            swap_for="two ponies"
+                            swap_for="Two ponies."
                             )
             session.add(newItem)
 
@@ -137,7 +137,7 @@ class DbSetup:
                             description='Basically the coolest thing ever',
                             category_id=5,
                             poster_id=1,
-                            swap_for='beesmans gum',
+                            swap_for='Beemans gum',
                             )
             session.add(newItem)
 

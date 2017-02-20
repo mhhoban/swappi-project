@@ -1,5 +1,3 @@
-import os
-import sys
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -15,36 +13,12 @@ class Users(Base):
     name = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False)
 
-    @property
-    def serialize(self):
-        """
-        Return user data in serializable format
-        """
-
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-        }
-
 
 class Categories(Base):
     __tablename__ = 'categories'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
-
-    @property
-    def serialize(self):
-        """
-        Return Category Data in serializable format
-        :return:
-        """
-
-        return {
-            'id': self.id,
-            'name': self.name,
-        }
 
 
 class Items(Base):
@@ -59,19 +33,6 @@ class Items(Base):
     poster = relationship(Users)
     swap_for = Column(String(100), nullable=False)
 
-    @property
-    def serialize(self):
-        """
-        return item data in serializable format
-        """
-
-        return {
-            'id': self.id,
-            'category_id': self.category_id,
-            'category': self.category,
-            'title': self.title,
-            'description': self.description,
-        }
 
 engine = create_engine('sqlite:///db/itemcatalog.db')
 

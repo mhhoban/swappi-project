@@ -1,6 +1,4 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from db_schema import Base, Categories, Items, Users
+from db_schema import Items, Users
 from sqlalchemy.orm.exc import NoResultFound
 
 
@@ -29,6 +27,13 @@ def check_user_exists(session, email):
 
 
 def register_new_user(name, email, session):
+    """
+    registers a new user if their user data from Google is un-recognized.
+    :param name:
+    :param email:
+    :param session:
+    :return:
+    """
 
     newUser = Users(name=name,
                     email=email,
@@ -39,6 +44,11 @@ def register_new_user(name, email, session):
 
 
 def user_auth_check(login_session):
+    """
+    checks whether a user is logged in or not.
+    :param login_session:
+    :return:
+    """
 
     user = {}
 
@@ -53,6 +63,14 @@ def user_auth_check(login_session):
 
 
 def user_owner_check(user_data, item_id, session):
+    """
+    checks whether a user owns, and can thus edit or delete,
+    an item.
+    :param user_data:
+    :param item_id:
+    :param session:
+    :return:
+    """
 
     if user_data:
 
